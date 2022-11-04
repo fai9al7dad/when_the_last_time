@@ -29,7 +29,7 @@ class AboutApp extends StatelessWidget {
               const SizedBox(height: 20),
               const Text("تطبيق متى آخر مرة", style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
-              const Text("الإصدار 1.0.0",
+              const Text("الإصدار 1.0.1",
                   style: TextStyle(fontSize: 14, color: Color(0xffae8f74))),
               const SizedBox(height: 20),
               const ListItem(
