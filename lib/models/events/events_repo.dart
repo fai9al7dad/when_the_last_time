@@ -164,7 +164,7 @@ class EventsRepo {
     await db.insert(
       _eventUpdates,
       {
-        'date': event.date.toIso8601String(),
+        'date': DateTime.now().toIso8601String(),
         'event_id': event.id,
       },
     );
@@ -178,13 +178,17 @@ class EventsRepo {
       where: 'event_id = ?',
       whereArgs: [event.id],
     );
-    return List.generate(maps.length, (i) {
+    List<EventRestoreHistory> generated = List.generate(maps.length, (i) {
       return EventRestoreHistory(
         date: DateTime.parse(maps[i]['date']),
         id: maps[i]['id'],
         eventId: maps[i]['event_id'],
       );
     });
+
+    // sort generated list by date
+    generated.sort((a, b) => b.date.compareTo(a.date));
+    return generated;
   }
 
   // delete event history
