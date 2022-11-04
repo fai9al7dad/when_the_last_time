@@ -1,3 +1,5 @@
+import 'package:audioplayers/audioplayers.dart';
+
 String timeAgo(DateTime d) {
   Duration diff = DateTime.now().difference(d);
   // DateTime.now().difference(d);
@@ -21,4 +23,14 @@ String timeAgo(DateTime d) {
     return "قبل ${diff.inMinutes > 2 ? diff.inMinutes : ""} ${diff.inMinutes == 1 ? "دقيقة" : diff.inMinutes == 2 ? "دقيقتين" : diff.inMinutes >= 3 && diff.inMinutes <= 10 ? "دقائق" : "دقيقة"}";
   }
   return "الآن";
+}
+
+void playPopSF() async {
+  final player = AudioPlayer();
+  await player.play(AssetSource('/audio/popSF.wav'), volume: 1);
+}
+
+void playClickSF() async {
+  final player = AudioPlayer();
+  await player.play(AssetSource('/audio/clickSF.wav'), volume: 1);
 }

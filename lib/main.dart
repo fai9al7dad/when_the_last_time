@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:when_the_last_time/models/events/events_provider.dart';
 import 'package:when_the_last_time/models/theme/theme_provider.dart';
-import 'package:when_the_last_time/screens/deleted_events/deleted_events.dart';
-import 'package:when_the_last_time/screens/events_details/events_details.dart';
+import 'package:when_the_last_time/screens/about/about_screen.dart';
+import 'package:when_the_last_time/screens/deleted_events/deleted_events_screen.dart';
+import 'package:when_the_last_time/screens/events_details/events_details_screen.dart';
 import 'package:when_the_last_time/screens/home_page/home_page.dart';
 import 'package:when_the_last_time/screens/init_app_loading.dart';
+import 'package:when_the_last_time/screens/settings/settings_screen.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
           HomePage.routeName: (context) => const HomePage(),
           DeletedEvents.routeName: (context) => const DeletedEvents(),
           EventsDetails.routeName: (context) => const EventsDetails(),
+          Settings.routeName: (context) => const Settings(),
+          AboutApp.routeName: (context) => const AboutApp(),
         },
       ),
     );

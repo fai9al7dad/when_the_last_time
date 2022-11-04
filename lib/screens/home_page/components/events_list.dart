@@ -18,7 +18,6 @@ class _EventsListState extends State<EventsList> {
   late bool isLoading;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchEvents();
   }
@@ -42,12 +41,12 @@ class _EventsListState extends State<EventsList> {
       return const Center(child: CircularProgressIndicator());
     }
     return Consumer<EventsProvider>(builder: (context, eventsProvider, child) {
-      final events = eventsProvider.events;
       return CustomScrollView(slivers: [
         SliverAppBar.large(
           title: const Text('متى آخر مرة ؟'),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           stretch: true,
+
           flexibleSpace: FlexibleSpaceBar(
             title: Text(
               'متى آخر مرة ؟',
@@ -61,7 +60,6 @@ class _EventsListState extends State<EventsList> {
               colorBlendMode: BlendMode.darken,
             ),
           ),
-
           // actions display soft deleted events when clicked
           actions: [
             IconButton(
@@ -69,22 +67,33 @@ class _EventsListState extends State<EventsList> {
                   Navigator.pushNamed(context, '/deleted-events');
                 },
                 tooltip: "الأحداث المؤرشفة",
-                icon: const Icon(Icons.archive))
+                icon: const Icon(Icons.archive)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/settings');
+                },
+                tooltip: "الإعدادات",
+                icon: const Icon(Icons.settings)),
           ],
         ),
         // SliverToBoxAdapter(
         //   child: Container(height: 700, color: Colors.black),
         // ),
-        events.isEmpty
-            ? const SliverToBoxAdapter(
-                child: Center(
-                  child: Text('لا يوجد أحداث حاليا'),
+        eventsProvider.events.isEmpty
+            ? SliverToBoxAdapter(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height -
+                      kToolbarHeight -
+                      kBottomNavigationBarHeight,
+                  child: const Center(
+                    child: Text('لا يوجد أحداث حاليا'),
+                  ),
                 ),
               )
             : SliverList(
                 delegate: SliverChildListDelegate([
                   AnimatedListViewWrapper(
-                    itemCount: events.length,
+                    itemCount: eventsProvider.events.length,
                     child: (index) {
                       return Slidable(
                           key: Key(eventsProvider.events[index].id.toString()),
@@ -94,8 +103,8 @@ class _EventsListState extends State<EventsList> {
                                 // update event
                                 SlidableAction(
                                   onPressed: (context) => {
-                                    eventsProvider
-                                        .addEventHistory(events[index])
+                                    eventsProvider.addEventHistory(
+                                        eventsProvider.events[index])
                                   },
                                   backgroundColor: Colors.blue,
                                   foregroundColor: Colors.white,
@@ -140,7 +149,7 @@ class _EventsListState extends State<EventsList> {
                                 ),
                               ]),
                           child: EventTile(
-                            event: events[index],
+                            event: eventsProvider.events[index],
                           ));
                     },
                   )

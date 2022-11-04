@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:when_the_last_time/models/events/event_model.dart';
-import 'package:when_the_last_time/screens/events_details/events_details.dart';
+import 'package:when_the_last_time/screens/events_details/events_details_screen.dart';
 import 'package:when_the_last_time/utils/bussines_logic.dart';
 
 class EventTile extends StatelessWidget {

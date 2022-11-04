@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:when_the_last_time/models/events/event_model.dart';
@@ -40,9 +42,18 @@ class EventsRepo {
 
   Future<void> insertEvent(Event event) async {
     final Database? db = await this.db;
-    await db!.insert(
+
+    var id = await db!.insert(
       _repoName,
       event.toMap(),
+    );
+
+    await db.insert(
+      _eventUpdates,
+      {
+        'date': event.date.toIso8601String(),
+        'event_id': id,
+      },
     );
   }
 
@@ -74,7 +85,7 @@ class EventsRepo {
     final Database? db = await this.db;
     final List<Map<String, dynamic>> maps =
         await db!.query(_repoName, where: 'isDeleted = ?', whereArgs: [1]);
-    return List.generate(maps.length, (i) {
+    List<Event> generated = List.generate(maps.length, (i) {
       return Event(
         name: maps[i]['name'],
         date: DateTime.parse(maps[i]['date']),
@@ -88,6 +99,8 @@ class EventsRepo {
         isDeleted: maps[i]['isDeleted'] == 1 ? true : false,
       );
     });
+    generated.sort((a, b) => b.date.compareTo(a.date));
+    return generated;
   }
 
   Future<void> updateEvent(Event event) async {
@@ -151,8 +164,18 @@ class EventsRepo {
   // add event history to events_updates table
   Future<void> addEventHistory(Event event) async {
     final db = await this.db;
+    await db!.insert(
+      _eventUpdates,
+      {
+        'date': DateTime.now().toIso8601String(),
+        'event_id': event.id,
+      },
+    );
+  }
 
-    // update event date to current date
+  // update event date to current date
+  Future<void> updateEventDateToNow(Event event) async {
+    final db = await this.db;
     await db!.update(
       _repoName,
       {
@@ -160,13 +183,6 @@ class EventsRepo {
       },
       where: 'id = ?',
       whereArgs: [event.id],
-    );
-    await db.insert(
-      _eventUpdates,
-      {
-        'date': DateTime.now().toIso8601String(),
-        'event_id': event.id,
-      },
     );
   }
 
@@ -195,10 +211,36 @@ class EventsRepo {
   Future<void> deleteEventHistory(
       EventRestoreHistory eventRestoreHistory) async {
     final db = await this.db;
+
+    // get the event from the event history and update the date to the date of the event history
     await db!.delete(
       _eventUpdates,
       where: 'id = ?',
       whereArgs: [eventRestoreHistory.id],
     );
+    final eventHistory = await db.query(
+      _eventUpdates,
+      where: 'event_id = ?',
+      whereArgs: [eventRestoreHistory.eventId],
+    );
+    // update the event date to the date of the latest event history
+    if (eventHistory.isNotEmpty) {
+      await db.update(
+        _repoName,
+        {
+          'date': eventHistory.last['date'],
+        },
+        where: 'id = ?',
+        whereArgs: [eventRestoreHistory.eventId],
+      );
+    }
+    // else {
+    //   // if there is no event history, delete the event
+    //   await db.delete(
+    //     _repoName,
+    //     where: 'id = ?',
+    //     whereArgs: [eventRestoreHistory.eventId],
+    //   );
+    // }
   }
 }

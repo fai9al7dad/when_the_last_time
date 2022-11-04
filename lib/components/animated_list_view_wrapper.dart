@@ -13,6 +13,7 @@ class AnimatedListViewWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimationLimiter(
         child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             itemCount: itemCount,
             itemBuilder: (context, index) {

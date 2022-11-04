@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.dark;
+  ThemeMode themeMode = ThemeMode.system;
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
 
@@ -47,7 +47,7 @@ class MyTheme {
     primaryColor: Colors.black,
     textTheme: const TextTheme(),
     colorScheme: const ColorScheme.light().copyWith(
-        primary: const Color(0xFF10B981),
+        primary: const Color(0xFFe1aa65),
         background: const Color(0xFFFEFCF7),
         secondaryContainer: const Color(0xFFE8E3D7),
         secondary: const Color(0xFFE5E7EB)),

@@ -39,6 +39,7 @@ dependencies:
   path: ^1.8.0
   flutter_staggered_animations: ^1.0.0
   flutter_slidable: ^2.0.0
+  audioplayers: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
   assets:
     - assets/images/appbar/
     - assets/images/gradients/
+    - assets/audio/
 
   fonts:
     - family: "montserrat-bold"

@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:when_the_last_time/models/events/event_model.dart';
 import 'package:when_the_last_time/models/events/events_provider.dart';
+import 'package:when_the_last_time/utils/bussines_logic.dart';
 
 class EditEventDialog extends StatefulWidget {
   final Event event;
@@ -63,17 +63,25 @@ class _EditEventDialogState extends State<EditEventDialog> {
                   labelText: 'الوصف',
                 ),
               ),
-              TextFormField(
-                controller: _dateController,
-                decoration: const InputDecoration(
-                  labelText: 'التاريخ',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'الرجاء إدخال التاريخ';
+
+              // date field should show a date picker
+
+              TextButton(
+                onPressed: () async {
+                  final date = await showDatePicker(
+                      context: context,
+
+                      // locale: const Locale('ar'),
+                      initialDate: DateTime.parse(_dateController.text),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now());
+                  if (date != null) {
+                    _dateController.text = date.toString();
                   }
-                  return null;
+                  setState(() {});
                 },
+                child: Text(
+                    "تاريخ الحدث:  ${timeAgo(DateTime.parse(_dateController.text))}"),
               ),
             ],
           ),
